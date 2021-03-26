@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { toast } from 'react-toastify'
 
 import '../styles/tasklist.scss'
 
@@ -14,16 +15,42 @@ export function TaskList() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [newTaskTitle, setNewTaskTitle] = useState('');
 
-  function handleCreateNewTask() {
-    // Crie uma nova task com um id random, não permita criar caso o título seja vazio.
+  function handleCreateNewTask(): React.ReactText|void {
+    if(!newTaskTitle) {
+      return toast.error("O campo to do não pode ficar em branco", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+    }
+     
+     
+    setTasks(tasks => [...tasks, { id: Math.floor(Math.random() * 100), title: newTaskTitle, isComplete: false }])     
+    setNewTaskTitle("");
   }
 
-  function handleToggleTaskCompletion(id: number) {
-    // Altere entre `true` ou `false` o campo `isComplete` de uma task com dado ID
+  function handleToggleTaskCompletion(id: number): void {
+    setTasks(tasks => tasks.map(task => ({...task, isComplete: task.id === id ? !task.isComplete : task.isComplete})))
   }
 
-  function handleRemoveTask(id: number) {
-    // Remova uma task da listagem pelo ID
+  function handleRemoveTask(id: number):React.ReactText|void {
+    if(!id) {
+      return toast.warning("Nenhum dado encontrado", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      })
+    }
+
+    setTasks(tasks => tasks.filter(task => task.id !== id));
   }
 
   return (

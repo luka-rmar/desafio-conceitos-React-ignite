@@ -87,6 +87,7 @@ section.task-list {
 
           &.completed {
             p {
+              transition: transform 2s;
               text-decoration:line-through;
               opacity: 0.6;
             }
